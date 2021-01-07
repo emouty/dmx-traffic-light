@@ -57,8 +57,10 @@ const int PIN_7 = 8;
 const int PIN_8 = 9;
 
 // set channels consts
-const int CHANNEL_FREQ = 1;
-const int CHANNEL_MODE = 2;
+//const int CHANNEL_MODE = 1;
+const int CHANNEL_L = 1;
+const int CHANNEL_R = 2;
+
 // the setup routine runs once when you press reset:
 void setup() {
   // Set leds pin as output pin
@@ -104,12 +106,16 @@ void loop()
   }
 }
 
-int getMode() {
+/*int getMode() {
   return dmx_slave.getChannelValue (CHANNEL_MODE);
+  }*/
+
+int getValueR() {
+  return dmx_slave.getChannelValue (CHANNEL_R);
 }
 
-int getFreq() {
-  return dmx_slave.getChannelValue (CHANNEL_FREQ);
+int getValueL() {
+  return dmx_slave.getChannelValue (CHANNEL_L);
 }
 
 int getDMXAdress() {
@@ -126,23 +132,32 @@ int getDMXAdress() {
 }
 
 void displayFromDMX() {
-  int mode = getMode();
-  int freq = getFreq();
+  // int mode = getMode();
+  int valueL = getValueL();
+  int valueR = getValueR();
 
-  if ( mode < 63 ) {
+  /*if ( mode < 63 ) {
     // mode R & L
-    analogWrite ( PIN_R , freq );
-    analogWrite ( PIN_L , freq );
-  } else if ( mode < 128 ) {
+    analogWrite ( PIN_R , valueL );
+    analogWrite ( PIN_L , valueR );
+
+    } else if ( mode < 128 ) {
     // mode R || L
     analogWrite ( PIN_R , freq );
     analogWrite ( PIN_L , 255 - freq );
-  } else if ( mode < 192 ) {
+    } else if ( mode < 192 ) {
     // mode R
     analogWrite ( PIN_R , freq );
-  } else {
+    } else {
     // mode L
     analogWrite ( PIN_L , freq );
-  }
+    }*/
 }
 
+void writeValue(int pin, int value) {
+  if (value > 200 ) {
+    digitalWrite(pin, HIGH);
+  } else {
+    analogWrite(pin, value);
+  }
+}
