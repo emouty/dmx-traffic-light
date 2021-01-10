@@ -55,12 +55,16 @@ const int PIN_5 = A5;
 const int PIN_6 = 6;
 const int PIN_7 = 8;
 const int PIN_8 = 9;
+// set pins for potentiometer
+const int PIN_POT = A0;
+
+
 
 // set channels consts
 //const int CHANNEL_MODE = 1;
 const int CHANNEL_L = 1;
 const int CHANNEL_R = 2;
-
+int adress = 0;
 // the setup routine runs once when you press reset:
 void setup() {
   // Set leds pin as output pin
@@ -75,6 +79,7 @@ void setup() {
   pinMode ( PIN_6, INPUT_PULLUP );
   pinMode ( PIN_7, INPUT_PULLUP );
   pinMode ( PIN_8, INPUT_PULLUP );
+  pinMode ( PIN_POT, INPUT);
 
   // Enable DMX slave interface and start recording
   // DMX data
@@ -82,7 +87,7 @@ void setup() {
 
   // Set start address to 1, this is also the default setting
   // You can change this address at any time during the program
-  int adress = getDMXAdress();
+  adress = getDMXAdress();
   if (adress == 0) {
     dmx_slave.setStartAddress (1);
   } else {
@@ -90,19 +95,23 @@ void setup() {
   }
 
 
-
 }
 
 // the loop routine runs over and over again forever:
 void loop()
 {
-  int adress = getDMXAdress();
+
+  //adress = getDMXAdress();
   if (adress == 0) {
-    digitalWrite ( PIN_R , HIGH );
-    digitalWrite ( PIN_L , HIGH );
+    // always on if no DMX adress
+    // digitalWrite ( PIN_R , LOW );
+    // digitalWrite ( PIN_L , LOW );
+    // strobo with potentiometer in A0
+    strobo();
   } else {
-    dmx_slave.setStartAddress (adress);
+    //dmx_slave.setStartAddress (adress);
     displayFromDMX();
+
   }
 }
 
@@ -135,7 +144,8 @@ void displayFromDMX() {
   // int mode = getMode();
   int valueL = getValueL();
   int valueR = getValueR();
-
+  writeValue ( PIN_L , 255 - valueL );
+  writeValue ( PIN_R , 255 - valueR );
   /*if ( mode < 63 ) {
     // mode R & L
     analogWrite ( PIN_R , valueL );
@@ -155,9 +165,35 @@ void displayFromDMX() {
 }
 
 void writeValue(int pin, int value) {
-  if (value > 200 ) {
-    digitalWrite(pin, HIGH);
-  } else {
-    analogWrite(pin, value);
+  //  if (value > 250 ) {
+  //    digitalWrite(pin, HIGH);
+  //  } else {
+  analogWrite(pin, value);
+  //  }
+}
+
+
+
+void strobo() {
+  int maxValue = 1000;
+  int value = maxValue - map(analogRead(PIN_POT), 0, 1023, 0, maxValue);
+
+  if (value == 0 ) {
+    // always on
+    digitalWrite ( PIN_R , LOW );
+    digitalWrite ( PIN_L , LOW );
+  }
+  else if (value == maxValue ) {
+    // always off
+    digitalWrite ( PIN_R , HIGH );
+    digitalWrite ( PIN_L , HIGH );
+  }
+  else {
+    digitalWrite(PIN_L, LOW);
+    digitalWrite(PIN_R, LOW);
+    delay(value);
+    digitalWrite(PIN_L, HIGH);
+    digitalWrite(PIN_R, HIGH);
+    delay(value);
   }
 }
