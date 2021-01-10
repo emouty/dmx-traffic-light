@@ -10,6 +10,11 @@ The 8 pin switch on top of the box control allow to select the DMX adress, if th
 |---|---|
 |  ![focus_box3](images/IMG_20191103_165208.jpg) |  ![focus_box2](images/IMG_20191103_165203.jpg) |
 
+## The enclosure
+![3dmodel](images/3d-model.png)
+
+The enclosure model can be found [Here](https://cad.onshape.com/documents/5131ef4fd89604ad79183158/w/fa3255602ebe765a22643be1/e/97975a5d2dfca5557aa9c980)
+
 ## Extras 
 
 This light has been donated to the [Garage 83-C](https://www.facebook.com/Garage83C/). It can be found in the scenography of their events :) 
